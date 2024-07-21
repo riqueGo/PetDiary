@@ -21,5 +21,14 @@
         android:id="@+id/navigation_schedule"
         android:name="com.example.petdiary.ui.schedule.ScheduleFragment"
         android:label="@string/title_schedule"
-        tools:layout="@layout/fragment_schedule" />
+        tools:layout="@layout/fragment_schedule">
+        <action
+            android:id="@+id/action_scheduleFragment_to_addAppointmentFragment"
+            app:destination="@id/addAppointmentFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addAppointmentFragment"
+        android:name="com.example.petdiary.ui.appointment.AddAppointmentFragment"
+        tools:layout="@layout/fragment_add_appointment" />
 </navigation>
