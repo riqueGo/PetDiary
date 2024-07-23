@@ -1,4 +1,4 @@
-package com.example.petdiary.ui.appointment
+package com.example.petdiary.ui.view
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.petdiary.databinding.FragmentAddAppointmentBinding
-import com.example.petdiary.ui.schedule.ScheduleViewModel
+import com.example.petdiary.ui.viewmodel.ScheduleViewModel
 import java.time.LocalDate
 import java.time.LocalTime
 import java.util.Calendar
@@ -59,12 +59,7 @@ class AddAppointmentFragment : Fragment() {
             val description = binding.etAppointmentDescription.text.toString()
             val alarm = binding.switchAlarm.isChecked
 
-            if (selectedDate == null || selectedTime == null) {
-                // Show error to the user
-                return@setOnClickListener
-            }
-
-            val newAppointment = Appointment(title, selectedDate!!, selectedTime!!, alarm, description)
+            val newAppointment = Appointment(title, selectedDate, selectedTime, alarm, description)
             scheduleViewModel.addAppointment(newAppointment)
             findNavController().navigateUp()
         }

@@ -1,4 +1,4 @@
-package com.example.petdiary.ui.home
+package com.example.petdiary.ui.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

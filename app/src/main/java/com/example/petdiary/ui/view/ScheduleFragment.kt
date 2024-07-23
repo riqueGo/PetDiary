@@ -1,4 +1,4 @@
-package com.example.petdiary.ui.schedule
+package com.example.petdiary.ui.view
 
 import android.annotation.SuppressLint
 import android.os.Build
@@ -13,8 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.petdiary.R
 import com.example.petdiary.databinding.FragmentScheduleBinding
-import com.example.petdiary.ui.appointment.Appointment
-import com.example.petdiary.ui.appointment.AppointmentAdapter
+import com.example.petdiary.ui.viewmodel.ScheduleViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class ScheduleFragment : Fragment() {

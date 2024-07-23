@@ -1,11 +1,11 @@
-package com.example.petdiary.ui.schedule
+package com.example.petdiary.ui.viewmodel
 
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.petdiary.ui.appointment.Appointment
+import com.example.petdiary.ui.view.Appointment
 import java.time.LocalDate
 import java.time.LocalTime
 
