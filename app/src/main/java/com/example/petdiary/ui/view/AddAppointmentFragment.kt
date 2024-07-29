@@ -9,14 +9,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.TimePicker
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.petdiary.databinding.FragmentAddAppointmentBinding
+import com.example.petdiary.domain.model.Appointment
 import com.example.petdiary.ui.viewmodel.ScheduleViewModel
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
+import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.ZoneId
 import java.util.Calendar
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -25,8 +33,6 @@ class AddAppointmentFragment : Fragment() {
     private var _binding: FragmentAddAppointmentBinding? = null
     private val binding get() = _binding!!
     private lateinit var scheduleViewModel: ScheduleViewModel
-    private var selectedDate: LocalDate? = null
-    private var selectedTime: LocalTime? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,33 +42,18 @@ class AddAppointmentFragment : Fragment() {
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         scheduleViewModel = ViewModelProvider(requireActivity())[ScheduleViewModel::class.java]
 
-        binding.etAppointmentDate.setOnClickListener {
-            showDatePickerDialog()
-        }
+        binding.startAppointmentDate.setOnClickListener { showDatePicker { date -> setStartDate(date) } }
+        binding.startAppointmentTime.setOnClickListener { showTimePicker { time -> setStartTime(time) } }
+        binding.endAppointmentDate.setOnClickListener { showDatePicker { date -> setEndDate(date) } }
+        binding.endAppointmentTime.setOnClickListener { showTimePicker { time -> setEndTime(time) } }
 
-        binding.etAppointmentTime.setOnClickListener {
-            showTimePickerDialog()
-        }
-
-        binding.btnCancelAppointment.setOnClickListener {
-            findNavController().navigateUp()
-        }
-
-        binding.btnSaveAppointment.setOnClickListener {
-            val title = binding.etAppointmentTitle.text.toString()
-            val description = binding.etAppointmentDescription.text.toString()
-            val alarm = binding.switchAlarm.isChecked
-
-            val newAppointment = Appointment(title, selectedDate, selectedTime, alarm, description)
-            scheduleViewModel.addAppointment(newAppointment)
-            findNavController().navigateUp()
-        }
+        binding.btnCancelAppointment.setOnClickListener {findNavController().navigateUp() }
+        binding.btnSaveAppointment.setOnClickListener { saveAppointment() }
     }
 
     override fun onDestroyView() {
@@ -70,28 +61,61 @@ class AddAppointmentFragment : Fragment() {
         _binding = null
     }
 
-    private fun showDatePickerDialog() {
-        val calendar = Calendar.getInstance()
-        val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH)
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-        val datePickerDialog = DatePickerDialog(requireContext(), { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
-            selectedDate = LocalDate.of(selectedYear, selectedMonth + 1, selectedDay)
-            binding.etAppointmentDate.setText(selectedDate.toString())
-        }, year, month, day)
-        datePickerDialog.show()
+    private fun showDatePicker(callback: (LocalDate) -> Unit) {
+        val datePicker = MaterialDatePicker.Builder.datePicker().build()
+        datePicker.addOnPositiveButtonClickListener {
+            val localDate = Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()
+            callback(localDate)
+        }
+        datePicker.show(parentFragmentManager, "datePicker")
     }
 
-    private fun showTimePickerDialog() {
-        val calendar = Calendar.getInstance()
-        val hour = calendar.get(Calendar.HOUR_OF_DAY)
-        val minute = calendar.get(Calendar.MINUTE)
+    private fun showTimePicker(callback: (LocalTime) -> Unit) {
+        val timePicker = MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_12H).build()
+        timePicker.addOnPositiveButtonClickListener {
+            val localTime = LocalTime.of(timePicker.hour, timePicker.minute)
+            callback(localTime)
+        }
+        timePicker.show(parentFragmentManager, "timePicker")
+    }
 
-        val timePickerDialog = TimePickerDialog(requireContext(), { _: TimePicker, selectedHour: Int, selectedMinute: Int ->
-            selectedTime = LocalTime.of(selectedHour, selectedMinute)
-            binding.etAppointmentTime.setText(selectedTime.toString())
-        }, hour, minute, true)
-        timePickerDialog.show()
+    private fun setStartDate(date: LocalDate) {
+        scheduleViewModel.setStartDate(date)
+        binding.startAppointmentDate.setText(
+            scheduleViewModel.startDateTime?.toLocalDate().toString()
+        )
+    }
+
+    private fun setStartTime(time: LocalTime) {
+        scheduleViewModel.setStartTime(time)
+        binding.startAppointmentTime.setText(
+            scheduleViewModel.startDateTime?.toLocalTime().toString()
+        )
+    }
+
+    private fun setEndDate(date: LocalDate) {
+        scheduleViewModel.setEndDate(date)
+        binding.endAppointmentDate.setText(
+            scheduleViewModel.endDateTime?.toLocalDate().toString()
+        )
+    }
+
+    private fun setEndTime(time: LocalTime) {
+        scheduleViewModel.setEndTime(time)
+        binding.endAppointmentTime.setText(
+            scheduleViewModel.endDateTime?.toLocalTime().toString()
+        )
+    }
+    private fun saveAppointment() {
+        val title = binding.etAppointmentTitle.text.toString()
+        val description = binding.etAppointmentDescription.text.toString()
+        
+        if(title.isEmpty() || scheduleViewModel.startDateTime == null || scheduleViewModel.endDateTime == null) {
+            Toast.makeText(requireContext(), "Fill all required fields", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        scheduleViewModel.saveAppointment(requireContext(), title, description)
+        findNavController().navigateUp()
     }
 }

@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.petdiary.R
+import com.example.petdiary.domain.model.Appointment
 
 class AppointmentAdapter(
     private val appointments: List<Appointment>,
@@ -18,7 +19,7 @@ class AppointmentAdapter(
 
         fun bind(appointment: Appointment) {
             titleTextView.text = appointment.title
-            dateTextView.text = appointment.date.toString()
+            dateTextView.text = appointment.startDateTime.toString()
             itemView.setOnClickListener {
                 onItemClick(appointment)
             }
