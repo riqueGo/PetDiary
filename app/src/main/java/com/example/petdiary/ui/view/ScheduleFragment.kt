@@ -3,7 +3,6 @@ package com.example.petdiary.ui.view
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ContentValues
-import android.content.Context
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.graphics.Color
@@ -19,23 +18,14 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
-import androidx.loader.app.LoaderManager
-import androidx.loader.content.Loader
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.petdiary.R
 import com.example.petdiary.databinding.FragmentScheduleBinding
 import com.example.petdiary.domain.model.Appointment
-import com.example.petdiary.services.calendar.CalendarEventsLoader
-import com.example.petdiary.services.calendar.CalendarLoader
+import com.example.petdiary.ui.adapters.AppointmentAdapter
 import com.example.petdiary.ui.viewmodel.ScheduleViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 @RequiresApi(Build.VERSION_CODES.O)

@@ -1,4 +1,4 @@
-package com.example.petdiary.ui.view
+package com.example.petdiary.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.View
