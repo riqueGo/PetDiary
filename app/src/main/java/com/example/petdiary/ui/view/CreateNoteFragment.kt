@@ -61,7 +61,7 @@ class CreateNoteFragment : Fragment() {
             id = System.currentTimeMillis(),
             title = title,
             content = content,
-            date = createNoteViewModel.date,
+            date = createNoteViewModel.date!!,
             pets = selectedPets ?: emptyList(),
             images = emptyList()
         )
