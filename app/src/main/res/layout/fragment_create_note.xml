@@ -52,7 +52,7 @@
         android:layout_margin="16dp" />
 
 
-    <androidx.viewpager.widget.ViewPager
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/imageCarousel"
         android:layout_width="0dp"
         android:layout_height="300dp"

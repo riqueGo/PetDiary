@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id("com.google.protobuf")
 }
 
 android {
@@ -40,7 +41,25 @@ android {
     packagingOptions {
         exclude("META-INF/DEPENDENCIES")
     }
+
+    protobuf {
+        protoc {
+            // find latest version number here:
+            // https://mvnrepository.com/artifact/com.google.protobuf/protoc
+            artifact = "com.google.protobuf:protoc:3.25.1"
+        }
+        generateProtoTasks {
+            all().forEach { task ->
+                task.plugins{
+                    create("java") {
+                        option("lite")
+                    }
+                }
+            }
+        }
+    }
 }
+
 
 dependencies {
     implementation(libs.androidx.core.ktx)
@@ -68,4 +87,16 @@ dependencies {
     implementation("com.google.api-client:google-api-client-android:1.32.1")
     implementation("com.google.oauth-client:google-oauth-client-jetty:1.34.1")
     implementation("com.google.apis:google-api-services-calendar:v3-rev20220715-2.0.0")
+
+    //Carousel
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
+    implementation("com.google.android.material:material:1.4.0")
+
+    //proto
+    implementation("androidx.datastore:datastore:1.0.0")
+    implementation("androidx.datastore:datastore-core:1.0.0")
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("com.google.protobuf:protobuf-javalite:3.14.0")
 }
+
+

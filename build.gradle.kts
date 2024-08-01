@@ -3,3 +3,9 @@ plugins {
     alias(libs.plugins.androidApplication) apply false
     alias(libs.plugins.jetbrainsKotlinAndroid) apply false
 }
+
+buildscript {
+    dependencies {
+        classpath("com.google.protobuf:protobuf-gradle-plugin:0.9.4")
+    }
+}

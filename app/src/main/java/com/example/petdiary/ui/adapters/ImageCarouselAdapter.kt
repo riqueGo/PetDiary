@@ -2,31 +2,31 @@ package com.example.petdiary.ui.adapters
 
 import android.content.Context
 import android.net.Uri
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
+import com.example.petdiary.R
 
-class ImageCarouselAdapter(private val context: Context, private val images: List<Uri>) : PagerAdapter() {
+class ImageCarouselAdapter(private val context: Context, private val imageUris: List<Uri>) :
+    RecyclerView.Adapter<ImageCarouselAdapter.ImageViewHolder>() {
 
-    override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        val imageView = ImageView(context).apply {
-            layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
-            setImageURI(images[position])
-            scaleType = ImageView.ScaleType.CENTER_CROP
-        }
-        container.addView(imageView)
-        return imageView
+    inner class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val imageView: ImageView = itemView.findViewById(R.id.imageView)
     }
 
-    override fun getCount(): Int = images.size
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
+        val view = LayoutInflater.from(context).inflate(R.layout.item_image_carousel, parent, false)
+        return ImageViewHolder(view)
+    }
 
-    override fun isViewFromObject(view: View, `object`: Any): Boolean = view == `object`
+    override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
+        holder.imageView.setImageURI(imageUris[position])
+    }
 
-    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
-        container.removeView(`object` as View)
+    override fun getItemCount(): Int {
+        return imageUris.size
     }
 }
