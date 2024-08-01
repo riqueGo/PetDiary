@@ -9,7 +9,17 @@
         android:id="@+id/navigation_home"
         android:name="com.example.petdiary.ui.view.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_createNoteFragment"
+            app:destination="@id/createNoteFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/createNoteFragment"
+        android:name="com.example.petdiary.ui.view.CreateNoteFragment"
+        android:label="Create Note"
+        tools:layout="@layout/fragment_create_note" />
 
     <fragment
         android:id="@+id/navigation_camera"

@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.petdiary.databinding.FragmentAddAppointmentBinding
 import com.example.petdiary.domain.model.Appointment
+import com.example.petdiary.ui.components.CalendarPicker
 import com.example.petdiary.ui.viewmodel.ScheduleViewModel
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
@@ -47,10 +48,10 @@ class AddAppointmentFragment : Fragment() {
 
         scheduleViewModel = ViewModelProvider(requireActivity())[ScheduleViewModel::class.java]
 
-        binding.startAppointmentDate.setOnClickListener { showDatePicker { date -> setStartDate(date) } }
-        binding.startAppointmentTime.setOnClickListener { showTimePicker { time -> setStartTime(time) } }
-        binding.endAppointmentDate.setOnClickListener { showDatePicker { date -> setEndDate(date) } }
-        binding.endAppointmentTime.setOnClickListener { showTimePicker { time -> setEndTime(time) } }
+        binding.startAppointmentDate.setOnClickListener { CalendarPicker.showDatePicker(parentFragmentManager) { date -> setStartDate(date) } }
+        binding.startAppointmentTime.setOnClickListener { CalendarPicker.showTimePicker(parentFragmentManager) { time -> setStartTime(time) } }
+        binding.endAppointmentDate.setOnClickListener { CalendarPicker.showDatePicker(parentFragmentManager) { date -> setEndDate(date) } }
+        binding.endAppointmentTime.setOnClickListener { CalendarPicker.showTimePicker(parentFragmentManager) { time -> setEndTime(time) } }
 
         binding.btnCancelAppointment.setOnClickListener {findNavController().navigateUp() }
         binding.btnSaveAppointment.setOnClickListener { saveAppointment() }
@@ -59,24 +60,6 @@ class AddAppointmentFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun showDatePicker(callback: (LocalDate) -> Unit) {
-        val datePicker = MaterialDatePicker.Builder.datePicker().build()
-        datePicker.addOnPositiveButtonClickListener {
-            val localDate = Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()
-            callback(localDate)
-        }
-        datePicker.show(parentFragmentManager, "datePicker")
-    }
-
-    private fun showTimePicker(callback: (LocalTime) -> Unit) {
-        val timePicker = MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_12H).build()
-        timePicker.addOnPositiveButtonClickListener {
-            val localTime = LocalTime.of(timePicker.hour, timePicker.minute)
-            callback(localTime)
-        }
-        timePicker.show(parentFragmentManager, "timePicker")
     }
 
     private fun setStartDate(date: LocalDate) {

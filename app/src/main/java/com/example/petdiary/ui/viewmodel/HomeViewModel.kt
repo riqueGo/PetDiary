@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.petdiary.domain.model.DiaryNote
-import com.example.petdiary.domain.model.YearSection
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 @RequiresApi(Build.VERSION_CODES.O)
