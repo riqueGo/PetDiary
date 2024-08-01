@@ -1,6 +1,7 @@
 package com.example.petdiary
 
 import android.os.Bundle
+import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -22,5 +23,21 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
 
         navView.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.createNoteFragment -> hideBottomNavigation()
+                R.id.addAppointmentFragment -> hideBottomNavigation()
+                else -> showBottomNavigation()
+            }
+        }
+    }
+
+    private fun hideBottomNavigation() {
+        binding.navView.visibility = View.GONE
+    }
+
+    private fun showBottomNavigation() {
+        binding.navView.visibility = View.VISIBLE
     }
 }

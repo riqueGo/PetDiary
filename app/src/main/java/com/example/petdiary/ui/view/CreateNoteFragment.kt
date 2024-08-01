@@ -1,5 +1,8 @@
 package com.example.petdiary.ui.view
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,7 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.petdiary.databinding.FragmentCreateNoteBinding
 import com.example.petdiary.domain.model.DiaryNote
-import com.example.petdiary.domain.model.Pet
+import com.example.petdiary.ui.adapters.ImageCarouselAdapter
 import com.example.petdiary.ui.components.CalendarPicker
 import com.example.petdiary.ui.viewmodel.CreateNoteViewModel
 import java.time.LocalDate
@@ -23,6 +26,8 @@ class CreateNoteFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val createNoteViewModel: CreateNoteViewModel by viewModels()
+
+    private val pickImagesRequestCode = 1001
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,6 +55,14 @@ class CreateNoteFragment : Fragment() {
         binding.cancelButton.setOnClickListener {
             findNavController().navigateUp()
         }
+
+        binding.addImageButton.setOnClickListener {
+            pickImages()
+        }
+
+        createNoteViewModel.selectedImages.observe(viewLifecycleOwner) { images ->
+            updateImageCarousel(images)
+        }
     }
 
     private fun addDiaryNote() {
@@ -63,7 +76,7 @@ class CreateNoteFragment : Fragment() {
             content = content,
             date = createNoteViewModel.date!!,
             pets = selectedPets ?: emptyList(),
-            images = emptyList()
+            images = createNoteViewModel.selectedImages.value ?: emptyList()
         )
         createNoteViewModel.saveNote(note)
         findNavController().navigateUp()
@@ -72,6 +85,36 @@ class CreateNoteFragment : Fragment() {
     private fun setDate(date: LocalDate) {
         createNoteViewModel.setDate(date)
         binding.dateText.setText(date.toString())
+    }
+
+    private fun pickImages() {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            type = "image/*"
+            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+        }
+        startActivityForResult(intent, pickImagesRequestCode)
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == pickImagesRequestCode && resultCode == Activity.RESULT_OK) {
+            data?.let { intent ->
+                intent.clipData?.let { clipData ->
+                    for (i in 0 until clipData.itemCount) {
+                        val uri = clipData.getItemAt(i).uri
+                        createNoteViewModel.addImage(uri)
+                    }
+                } ?: intent.data?.let { uri ->
+                    createNoteViewModel.addImage(uri)
+                }
+            }
+        }
+    }
+
+    private fun updateImageCarousel(images: List<Uri>) {
+        val adapter = ImageCarouselAdapter(requireContext(), images)
+        binding.imageCarousel.adapter = adapter
     }
 
     override fun onDestroyView() {

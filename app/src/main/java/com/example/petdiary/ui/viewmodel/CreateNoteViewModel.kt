@@ -1,5 +1,6 @@
 package com.example.petdiary.ui.viewmodel
 
+import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
@@ -30,6 +31,9 @@ class CreateNoteViewModel : ViewModel() {
     val date: LocalDate?
         get() = _date
 
+    private val _selectedImages = MutableLiveData<List<Uri>>().apply { value = mutableListOf() }
+    val selectedImages: LiveData<List<Uri>> = _selectedImages
+
     fun setDate(date: LocalDate) {
         _date = date
     }
@@ -39,8 +43,20 @@ class CreateNoteViewModel : ViewModel() {
     }
 
     fun saveNote(note: DiaryNote) {
-        viewModelScope.launch {
-            _notes.value = _notes.value?.plus(note)
+        _notes.value = _notes.value?.plus(note)
+    }
+
+    fun addImage(uri: Uri) {
+        val currentImages = _selectedImages.value?.toMutableList() ?: mutableListOf()
+        if (currentImages.size < 10) {
+            currentImages.add(uri)
+            _selectedImages.value = currentImages
         }
+    }
+
+    fun removeImage(uri: Uri) {
+        val currentImages = _selectedImages.value?.toMutableList()
+        currentImages?.remove(uri)
+        _selectedImages.value = currentImages
     }
 }

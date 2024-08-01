@@ -1,5 +1,6 @@
 package com.example.petdiary.domain.model
 
+import android.net.Uri
 import java.time.LocalDate
 
 data class DiaryNote(
@@ -8,5 +9,5 @@ data class DiaryNote(
     val content: String,
     val date: LocalDate,
     val pets: List<Pet> = emptyList(),
-    val images: List<String> = emptyList()
+    val images: List<Uri> = emptyList()
 )
