@@ -22,7 +22,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.petdiary.R
 import com.example.petdiary.databinding.FragmentScheduleBinding
-import com.example.petdiary.domain.model.Appointment
+import com.example.petdiary.ui.model.Appointment
 import com.example.petdiary.ui.adapters.AppointmentAdapter
 import com.example.petdiary.ui.viewmodel.ScheduleViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

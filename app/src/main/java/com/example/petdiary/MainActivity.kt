@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.petdiary.databinding.ActivityMainBinding
+import com.example.petdiary.services.notification.Schedule
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,6 +32,8 @@ class MainActivity : AppCompatActivity() {
                 else -> showBottomNavigation()
             }
         }
+
+        Schedule.scheduleDailyReminder(applicationContext)
     }
 
     private fun hideBottomNavigation() {
@@ -40,4 +43,7 @@ class MainActivity : AppCompatActivity() {
     private fun showBottomNavigation() {
         binding.navView.visibility = View.VISIBLE
     }
+
+
+
 }

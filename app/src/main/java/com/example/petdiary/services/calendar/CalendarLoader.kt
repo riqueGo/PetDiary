@@ -9,7 +9,7 @@ import android.os.Build
 import android.provider.CalendarContract
 import androidx.annotation.RequiresApi
 import androidx.loader.content.AsyncTaskLoader
-import com.example.petdiary.domain.model.Appointment
+import com.example.petdiary.ui.model.Appointment
 import java.time.ZoneId
 
 class CalendarLoader(

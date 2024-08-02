@@ -1,32 +1,20 @@
 package com.example.petdiary.ui.view
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.DatePicker
-import android.widget.TimePicker
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.petdiary.databinding.FragmentAddAppointmentBinding
-import com.example.petdiary.domain.model.Appointment
 import com.example.petdiary.ui.components.CalendarPicker
 import com.example.petdiary.ui.viewmodel.ScheduleViewModel
-import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.timepicker.MaterialTimePicker
-import com.google.android.material.timepicker.TimeFormat
-import java.time.Instant
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.LocalTime
-import java.time.ZoneId
-import java.util.Calendar
 
 @RequiresApi(Build.VERSION_CODES.O)
 class AddAppointmentFragment : Fragment() {

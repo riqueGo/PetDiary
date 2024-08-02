@@ -1,4 +1,4 @@
-package com.example.petdiary.domain.model
+package com.example.petdiary.ui.model
 
 import java.time.LocalDate
 

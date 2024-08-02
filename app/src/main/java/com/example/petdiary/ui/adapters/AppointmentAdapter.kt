@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.petdiary.R
-import com.example.petdiary.domain.model.Appointment
+import com.example.petdiary.ui.model.Appointment
 
 class AppointmentAdapter(
     private val appointments: List<Appointment>,

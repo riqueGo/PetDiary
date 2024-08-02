@@ -1,25 +1,16 @@
 package com.example.petdiary.ui.viewmodel
 
-import android.annotation.SuppressLint
-import android.app.Application
 import android.content.Context
-import android.database.Cursor
 import android.os.Build
-import android.provider.CalendarContract
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.petdiary.domain.model.Appointment
+import com.example.petdiary.ui.model.Appointment
 import com.example.petdiary.services.calendar.CalendarLoader
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
-import java.time.ZoneOffset
 
 @RequiresApi(Build.VERSION_CODES.O)
 class ScheduleViewModel : ViewModel() {

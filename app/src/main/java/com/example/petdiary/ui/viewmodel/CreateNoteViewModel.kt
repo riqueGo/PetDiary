@@ -9,7 +9,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.app.datastore.DiaryNote
-import com.example.petdiary.domain.model.Pet
+import com.example.petdiary.ui.model.Pet
 import com.example.petdiary.repository.DiaryNoteRepository
 import kotlinx.coroutines.launch
 import java.time.LocalDate
