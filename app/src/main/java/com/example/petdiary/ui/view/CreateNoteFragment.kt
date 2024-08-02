@@ -9,6 +9,7 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -73,19 +74,25 @@ class CreateNoteFragment : Fragment() {
         val selectedPetNames = binding.petsMultiSelect.checkedItems
         val selectedPets = createNoteViewModel.pets.value?.filter { selectedPetNames.contains(it.name) }
         val images = createNoteViewModel.selectedImages.value?.map { it.toString() } ?: emptyList()
+        val date = createNoteViewModel.date.toString().trim()
+
+        if (title.isEmpty() || date.isEmpty() || selectedPets.isNullOrEmpty()) {
+            Toast.makeText(requireContext(), "Please fill in the title, date, and select at least one pet.", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         val noteProto = ProtoDiaryNote.newBuilder()
             .setId(System.currentTimeMillis())
             .setTitle(title)
             .setContent(content)
-            .setDate(createNoteViewModel.date.toString())
+            .setDate(date)
             .addAllImages(images)
-            .addAllPets(selectedPets?.map { pet ->
+            .addAllPets(selectedPets.map { pet ->
                 ProtoPet.newBuilder()
                     .setName(pet.name)
                     .setSpecies(pet.species)
                     .setRace(pet.race)
-                    .setBirthday(pet.birthday.toString())
+                    .setBirthday(pet.birthday)
                     .build()
             })
             .build()

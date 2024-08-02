@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.createNoteFragment -> hideBottomNavigation()
                 R.id.addAppointmentFragment -> hideBottomNavigation()
+                R.id.diaryNoteFragment -> hideBottomNavigation()
                 else -> showBottomNavigation()
             }
         }

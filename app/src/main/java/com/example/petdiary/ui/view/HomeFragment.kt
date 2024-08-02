@@ -45,12 +45,10 @@ class HomeFragment : Fragment() {
         expandableListView.setOnChildClickListener { _, _, groupPosition, childPosition, _ ->
             val selectedNote = diaryAdapter.getChild(groupPosition, childPosition) as DiaryNote
 
-            // Create a bundle with the DiaryNote
             val bundle = Bundle().apply {
                 putParcelable("diaryNote", selectedNote)
             }
 
-            // Navigate to DiaryNoteFragment with the bundle
             findNavController().navigate(R.id.action_homeFragment_to_displayNoteFragment, bundle)
             true
         }

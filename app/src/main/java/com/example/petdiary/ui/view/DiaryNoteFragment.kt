@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.petdiary.databinding.FragmentDiaryNoteBinding
 import com.example.petdiary.ui.adapters.ImageCarouselAdapter
 import com.example.petdiary.ui.model.DiaryNote
@@ -32,12 +33,16 @@ class DiaryNoteFragment : Fragment() {
             diaryNote = it.getParcelable("diaryNote")!!
             displayNoteDetails()
         }
+
+        binding.returnButton.setOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
     private fun displayNoteDetails() {
         binding.titleTextView.text = diaryNote.title
         binding.contentTextView.text = diaryNote.content
-        binding.dateTextView.text = diaryNote.date.toString()
+        binding.dateTextView.text = diaryNote.date
         val imageUris = diaryNote.images.map { Uri.parse(it) }
         val imageAdapter = ImageCarouselAdapter(requireContext(), imageUris)
         binding.imageCarousel.adapter = imageAdapter
