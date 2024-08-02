@@ -1,18 +1,16 @@
 package com.example.petdiary.ui.viewmodel
 
 import android.app.Application
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.app.datastore.DiaryNote
 import com.example.petdiary.repository.DiaryNoteRepository
 import com.example.petdiary.services.calendar.CastDates
+import com.example.petdiary.ui.model.DiaryNote
+import com.example.petdiary.ui.model.toDiaryNote
 import kotlinx.coroutines.launch
 
-@RequiresApi(Build.VERSION_CODES.O)
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val diaryNoteRepository = DiaryNoteRepository(application)
@@ -26,7 +24,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun loadNotes() {
         viewModelScope.launch {
-            diaryNoteRepository.getAllNotes().collect { notes ->
+            diaryNoteRepository.getAllNotes().collect { protoNotes ->
+                val notes = protoNotes.map { protoDiaryNote ->
+                    protoDiaryNote.toDiaryNote()
+                }
+
                 val groupedByYear = notes.groupBy {
                     CastDates.fromStringToDate(it.date).year
                 }.toSortedMap(compareByDescending { it })

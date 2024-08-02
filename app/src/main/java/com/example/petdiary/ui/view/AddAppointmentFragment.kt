@@ -16,7 +16,6 @@ import com.example.petdiary.ui.viewmodel.ScheduleViewModel
 import java.time.LocalDate
 import java.time.LocalTime
 
-@RequiresApi(Build.VERSION_CODES.O)
 class AddAppointmentFragment : Fragment() {
 
     private var _binding: FragmentAddAppointmentBinding? = null

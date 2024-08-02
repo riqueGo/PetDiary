@@ -3,20 +3,20 @@ syntax = "proto3";
 option java_package = "com.example.app.datastore";
 option java_multiple_files = true;
 
-message DiaryNoteList {
-    repeated DiaryNote diary_notes = 1;
+message ProtoDiaryNoteList {
+    repeated ProtoDiaryNote diary_notes = 1;
 }
 
-message DiaryNote {
+message ProtoDiaryNote {
     int64 id = 1;
     string title = 2;
     string content = 3;
     string date = 4;
-    repeated Pet pets = 5;
+    repeated ProtoPet pets = 5;
     repeated string images = 6;
 }
 
-message Pet {
+message ProtoPet {
     string name = 1;
     string species = 2;
     string race = 3;

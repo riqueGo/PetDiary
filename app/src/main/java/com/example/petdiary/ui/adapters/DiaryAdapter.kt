@@ -1,17 +1,14 @@
 package com.example.petdiary.ui.adapters
 
 import android.content.Context
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
 import android.widget.TextView
-import androidx.annotation.RequiresApi
-import com.example.app.datastore.DiaryNote
 import com.example.petdiary.R
-import java.time.LocalDateTime
-@RequiresApi(Build.VERSION_CODES.O)
+import com.example.petdiary.ui.model.DiaryNote
+
 class DiaryAdapter(
     private val context: Context,
     private val sections: Map<Int, List<DiaryNote>>

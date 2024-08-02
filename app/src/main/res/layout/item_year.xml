@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="16dp">
-
     <TextView
         android:id="@+id/yearTextView"
         android:layout_width="wrap_content"

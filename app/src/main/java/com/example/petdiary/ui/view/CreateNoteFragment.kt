@@ -13,15 +13,14 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.example.app.datastore.DiaryNote
-import com.example.app.datastore.Pet
+import com.example.app.datastore.ProtoDiaryNote
+import com.example.app.datastore.ProtoPet
 import com.example.petdiary.databinding.FragmentCreateNoteBinding
 import com.example.petdiary.ui.adapters.ImageCarouselAdapter
 import com.example.petdiary.ui.components.CalendarPicker
 import com.example.petdiary.ui.viewmodel.CreateNoteViewModel
 import java.time.LocalDate
 
-@RequiresApi(Build.VERSION_CODES.O)
 class CreateNoteFragment : Fragment() {
 
     private var _binding: FragmentCreateNoteBinding? = null
@@ -75,14 +74,14 @@ class CreateNoteFragment : Fragment() {
         val selectedPets = createNoteViewModel.pets.value?.filter { selectedPetNames.contains(it.name) }
         val images = createNoteViewModel.selectedImages.value?.map { it.toString() } ?: emptyList()
 
-        val noteProto = DiaryNote.newBuilder()
+        val noteProto = ProtoDiaryNote.newBuilder()
             .setId(System.currentTimeMillis())
             .setTitle(title)
             .setContent(content)
             .setDate(createNoteViewModel.date.toString())
             .addAllImages(images)
             .addAllPets(selectedPets?.map { pet ->
-                Pet.newBuilder()
+                ProtoPet.newBuilder()
                     .setName(pet.name)
                     .setSpecies(pet.species)
                     .setRace(pet.race)

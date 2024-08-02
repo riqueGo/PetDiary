@@ -2,28 +2,25 @@ package com.example.petdiary.ui.viewmodel
 
 import android.app.Application
 import android.net.Uri
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.app.datastore.DiaryNote
+import com.example.app.datastore.ProtoDiaryNote
 import com.example.petdiary.ui.model.Pet
 import com.example.petdiary.repository.DiaryNoteRepository
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
-@RequiresApi(Build.VERSION_CODES.O)
 class CreateNoteViewModel(application: Application) : AndroidViewModel(application) {
 
     private val diaryNoteRepository = DiaryNoteRepository(application)
 
     private val _pets = MutableLiveData<List<Pet>>().apply {
         value = mutableListOf(
-            Pet("Buddy", "Dog", "Golden Retriever", LocalDate.now().minusYears(3)),
-            Pet("Whiskers", "Cat", "Siamese", LocalDate.now().minusYears(2)),
-            Pet("Tweety", "Bird", "Canary", LocalDate.now().minusYears(1))
+            Pet("Buddy", "Dog", "Golden Retriever", ""),
+            Pet("Whiskers", "Cat", "Siamese", ""),
+            Pet("Tweety", "Bird", "Canary", "")
         )
     }
     val pets: LiveData<List<Pet>> = _pets
@@ -55,7 +52,7 @@ class CreateNoteViewModel(application: Application) : AndroidViewModel(applicati
         _selectedImages.value = emptyList()
     }
 
-    fun saveNote(note: DiaryNote) {
+    fun saveNote(note: ProtoDiaryNote) {
         viewModelScope.launch {
             diaryNoteRepository.saveNote(note)
         }

@@ -1,26 +1,17 @@
 package com.example.petdiary.ui.view
 
-import android.annotation.SuppressLint
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ExpandableListView
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.petdiary.R
 import com.example.petdiary.databinding.FragmentHomeBinding
-import com.example.petdiary.databinding.FragmentScheduleBinding
 import com.example.petdiary.ui.adapters.DiaryAdapter
+import com.example.petdiary.ui.model.DiaryNote
 import com.example.petdiary.ui.viewmodel.HomeViewModel
-@RequiresApi(Build.VERSION_CODES.O)
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
@@ -49,6 +40,19 @@ class HomeFragment : Fragment() {
             for (i in 0 until diaryAdapter.groupCount) {
                 expandableListView.expandGroup(i)
             }
+        }
+
+        expandableListView.setOnChildClickListener { _, _, groupPosition, childPosition, _ ->
+            val selectedNote = diaryAdapter.getChild(groupPosition, childPosition) as DiaryNote
+
+            // Create a bundle with the DiaryNote
+            val bundle = Bundle().apply {
+                putParcelable("diaryNote", selectedNote)
+            }
+
+            // Navigate to DiaryNoteFragment with the bundle
+            findNavController().navigate(R.id.action_homeFragment_to_displayNoteFragment, bundle)
+            true
         }
 
         binding.fabAddDailyNote.setOnClickListener {

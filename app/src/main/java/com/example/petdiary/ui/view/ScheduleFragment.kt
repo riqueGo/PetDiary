@@ -28,7 +28,6 @@ import com.example.petdiary.ui.viewmodel.ScheduleViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.time.LocalDateTime
 import java.time.ZoneOffset
-@RequiresApi(Build.VERSION_CODES.O)
 class ScheduleFragment : Fragment() {
 
     private var _binding: FragmentScheduleBinding? = null
