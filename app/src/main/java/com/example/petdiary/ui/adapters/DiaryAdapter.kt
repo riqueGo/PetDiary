@@ -1,5 +1,6 @@
 package com.example.petdiary.ui.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
 import android.widget.TextView
 import com.example.petdiary.R
+import com.example.petdiary.services.calendar.CastDates
 import com.example.petdiary.ui.model.DiaryNote
 
 class DiaryAdapter(
@@ -52,12 +54,14 @@ class DiaryAdapter(
         return view
     }
 
+    @SuppressLint("SetTextI18n")
     override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup?): View {
         val note = getChild(groupPosition, childPosition) as DiaryNote
         val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.item_note, parent, false)
 
         val titleTextView: TextView = view.findViewById(R.id.titleTextView)
         val petsTextView: TextView = view.findViewById(R.id.petsTextView)
+        val dateTextView: TextView = view.findViewById(R.id.dateTextView)
 
         titleTextView.text = note.title
 
@@ -67,6 +71,9 @@ class DiaryAdapter(
             "No pets"
         }
         petsTextView.text = petsNames
+
+        val date = CastDates.fromStringToDate(note.date)
+        dateTextView.text = "${date.month} - ${date.dayOfMonth}"
 
         return view
     }

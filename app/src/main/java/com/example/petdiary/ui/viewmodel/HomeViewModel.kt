@@ -29,13 +29,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                     protoDiaryNote.toDiaryNote()
                 }
 
-
                 val groupedByYear = notes.groupBy {
-                    if(it.date == "null") {
-                        Int.MIN_VALUE
-                    } else {
-                        CastDates.fromStringToDate(it.date).year
-                    }
+                    CastDates.fromStringToDate(it.date).year
                 }.toSortedMap(compareByDescending { it })
 
                 _yearSections.postValue(groupedByYear)

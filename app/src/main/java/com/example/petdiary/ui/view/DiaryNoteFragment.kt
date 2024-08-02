@@ -34,7 +34,9 @@ class DiaryNoteFragment : Fragment() {
             displayNoteDetails()
         }
 
-        binding.returnButton.setOnClickListener {
+        binding.returnButton.setOnClickListener { findNavController().navigateUp() }
+
+        binding.deleteButton.setOnClickListener {
             findNavController().navigateUp()
         }
     }
