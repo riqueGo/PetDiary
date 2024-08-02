@@ -182,6 +182,8 @@ class ScheduleFragment : Fragment() {
     @SuppressLint("Range")
     private fun getCalendarEvents(calendarId: Long) {
         AsyncTask.execute {
+            val currentTimeMillis = System.currentTimeMillis()
+
             val cursor: Cursor? = requireContext().contentResolver.query(
                 CalendarContract.Events.CONTENT_URI,
                 arrayOf(
@@ -191,8 +193,8 @@ class ScheduleFragment : Fragment() {
                     CalendarContract.Events.DTEND,
                     CalendarContract.Events.DESCRIPTION
                 ),
-                "${CalendarContract.Events.CALENDAR_ID} = ? AND ${CalendarContract.Events.DELETED} = 0",
-                arrayOf(calendarId.toString()),
+                "${CalendarContract.Events.CALENDAR_ID} = ? AND ${CalendarContract.Events.DELETED} = 0 AND ${CalendarContract.Events.DTEND} >= ?",
+                arrayOf(calendarId.toString(), currentTimeMillis.toString()),
                 CalendarContract.Events.DTSTART + " ASC"
             )
 
