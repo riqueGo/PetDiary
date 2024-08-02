@@ -41,24 +41,8 @@ android {
     packagingOptions {
         exclude("META-INF/DEPENDENCIES")
     }
-
-    protobuf {
-        protoc {
-            // find latest version number here:
-            // https://mvnrepository.com/artifact/com.google.protobuf/protoc
-            artifact = "com.google.protobuf:protoc:3.25.1"
-        }
-        generateProtoTasks {
-            all().forEach { task ->
-                task.plugins{
-                    create("java") {
-                        option("lite")
-                    }
-                }
-            }
-        }
-    }
 }
+
 
 
 dependencies {
@@ -96,7 +80,24 @@ dependencies {
     implementation("androidx.datastore:datastore:1.0.0")
     implementation("androidx.datastore:datastore-core:1.0.0")
     implementation("androidx.datastore:datastore-preferences:1.0.0")
-    implementation("com.google.protobuf:protobuf-javalite:3.14.0")
+    implementation("com.google.protobuf:protobuf-javalite:3.18.0")
+}
+
+protobuf {
+    protoc {
+        // find latest version number here:
+        // https://mvnrepository.com/artifact/com.google.protobuf/protoc
+        artifact = "com.google.protobuf:protoc:3.25.1"
+    }
+    generateProtoTasks {
+        all().forEach { task ->
+            task.plugins{
+                create("java") {
+                    option("lite")
+                }
+            }
+        }
+    }
 }
 
 

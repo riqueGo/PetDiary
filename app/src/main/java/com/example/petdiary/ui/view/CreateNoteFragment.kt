@@ -9,13 +9,13 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.example.app.datastore.DiaryNote
+import com.example.app.datastore.Pet
 import com.example.petdiary.databinding.FragmentCreateNoteBinding
-import com.example.petdiary.domain.model.DiaryNote
 import com.example.petdiary.ui.adapters.ImageCarouselAdapter
 import com.example.petdiary.ui.components.CalendarPicker
 import com.example.petdiary.ui.viewmodel.CreateNoteViewModel
@@ -27,7 +27,7 @@ class CreateNoteFragment : Fragment() {
     private var _binding: FragmentCreateNoteBinding? = null
     private val binding get() = _binding!!
 
-    private val createNoteViewModel: CreateNoteViewModel by viewModels()
+    private val createNoteViewModel: CreateNoteViewModel by activityViewModels()
     private val pickImagesRequestCode = 1001
 
     override fun onCreateView(
@@ -51,10 +51,12 @@ class CreateNoteFragment : Fragment() {
 
         binding.saveButton.setOnClickListener {
             addDiaryNote()
+            createNoteViewModel.clearImages()
         }
 
         binding.cancelButton.setOnClickListener {
             findNavController().navigateUp()
+            createNoteViewModel.clearImages()
         }
 
         binding.addImageButton.setOnClickListener {
@@ -71,15 +73,25 @@ class CreateNoteFragment : Fragment() {
         val content = binding.contentEditText.text.toString()
         val selectedPetNames = binding.petsMultiSelect.checkedItems
         val selectedPets = createNoteViewModel.pets.value?.filter { selectedPetNames.contains(it.name) }
-        val note = DiaryNote(
-            id = System.currentTimeMillis(),
-            title = title,
-            content = content,
-            date = createNoteViewModel.date!!,
-            pets = selectedPets ?: emptyList(),
-            images = createNoteViewModel.selectedImages.value ?: emptyList()
-        )
-        createNoteViewModel.saveNote(note)
+        val images = createNoteViewModel.selectedImages.value?.map { it.toString() } ?: emptyList()
+
+        val noteProto = DiaryNote.newBuilder()
+            .setId(System.currentTimeMillis())
+            .setTitle(title)
+            .setContent(content)
+            .setDate(createNoteViewModel.date.toString())
+            .addAllImages(images)
+            .addAllPets(selectedPets?.map { pet ->
+                Pet.newBuilder()
+                    .setName(pet.name)
+                    .setSpecies(pet.species)
+                    .setRace(pet.race)
+                    .setBirthday(pet.birthday.toString())
+                    .build()
+            })
+            .build()
+
+        createNoteViewModel.saveNote(noteProto)
         findNavController().navigateUp()
     }
 

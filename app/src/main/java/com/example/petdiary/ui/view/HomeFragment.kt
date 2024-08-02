@@ -24,17 +24,15 @@ import com.example.petdiary.ui.viewmodel.HomeViewModel
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
-
     private val binding get() = _binding!!
 
     private val homeViewModel: HomeViewModel by activityViewModels()
     private lateinit var diaryAdapter: DiaryAdapter
-    private lateinit var expandableListView: ExpandableListView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -42,16 +40,16 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        expandableListView = binding.expandableListView
+        val expandableListView = binding.expandableListView
 
-        homeViewModel.yearSections.observe(viewLifecycleOwner, Observer { sections ->
+        homeViewModel.yearSections.observe(viewLifecycleOwner) { sections ->
             diaryAdapter = DiaryAdapter(requireContext(), sections)
             expandableListView.setAdapter(diaryAdapter)
 
             for (i in 0 until diaryAdapter.groupCount) {
                 expandableListView.expandGroup(i)
             }
-        })
+        }
 
         binding.fabAddDailyNote.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_createNoteFragment)

@@ -1,20 +1,23 @@
 package com.example.petdiary.ui.viewmodel
 
+import android.app.Application
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.example.petdiary.domain.model.DiaryNote
+import androidx.lifecycle.viewModelScope
+import com.example.app.datastore.DiaryNote
 import com.example.petdiary.domain.model.Pet
+import com.example.petdiary.repository.DiaryNoteRepository
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
-class CreateNoteViewModel : ViewModel() {
+class CreateNoteViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _notes = MutableLiveData<List<DiaryNote>>().apply { value = mutableListOf() }
-    val notes: LiveData<List<DiaryNote>> = _notes
+    private val diaryNoteRepository = DiaryNoteRepository(application)
 
     private val _pets = MutableLiveData<List<Pet>>().apply {
         value = mutableListOf(
@@ -40,10 +43,6 @@ class CreateNoteViewModel : ViewModel() {
         return _pets.value?.map { it.name }?.toTypedArray()
     }
 
-    fun saveNote(note: DiaryNote) {
-        _notes.value = _notes.value?.plus(note)
-    }
-
     fun addImage(uri: Uri) {
         val currentImages = _selectedImages.value?.toMutableList() ?: mutableListOf()
         if (currentImages.size < 10) {
@@ -52,9 +51,13 @@ class CreateNoteViewModel : ViewModel() {
         }
     }
 
-    fun removeImage(uri: Uri) {
-        val currentImages = _selectedImages.value?.toMutableList()
-        currentImages?.remove(uri)
-        _selectedImages.value = currentImages
+    fun clearImages() {
+        _selectedImages.value = emptyList()
+    }
+
+    fun saveNote(note: DiaryNote) {
+        viewModelScope.launch {
+            diaryNoteRepository.saveNote(note)
+        }
     }
 }

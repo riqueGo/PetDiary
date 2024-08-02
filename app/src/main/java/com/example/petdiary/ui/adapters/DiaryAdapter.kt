@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import com.example.app.datastore.DiaryNote
 import com.example.petdiary.R
-import com.example.petdiary.domain.model.DiaryNote
 import java.time.LocalDateTime
 @RequiresApi(Build.VERSION_CODES.O)
 class DiaryAdapter(
