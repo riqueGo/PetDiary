@@ -24,6 +24,13 @@ class DiaryNoteRepository(val context: Context) {
         }
     }
 
+    suspend fun deleteNote(noteId: Int) {
+        context.dataStore.updateData { currentNotes ->
+            val filteredNotes = currentNotes.diaryNotesList.filter { it.id != noteId }
+            currentNotes.toBuilder().clearDiaryNotes().addAllDiaryNotes(filteredNotes).build()
+        }
+    }
+
     fun getAllNotes(): Flow<MutableList<ProtoDiaryNote>> {
         return context.dataStore.data.map { it.diaryNotesList }
     }

@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class DiaryNote(
-    val id: Long,
+    val id: Int,
     val title: String,
     val content: String,
     val date: String,

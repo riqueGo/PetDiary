@@ -51,7 +51,6 @@ class CreateNoteFragment : Fragment() {
 
         binding.saveButton.setOnClickListener {
             addDiaryNote()
-            createNoteViewModel.clearImages()
         }
 
         binding.cancelButton.setOnClickListener {
@@ -82,7 +81,7 @@ class CreateNoteFragment : Fragment() {
         }
 
         val noteProto = ProtoDiaryNote.newBuilder()
-            .setId(System.currentTimeMillis())
+            .setId(System.currentTimeMillis().toInt())
             .setTitle(title)
             .setContent(content)
             .setDate(date)
@@ -99,6 +98,7 @@ class CreateNoteFragment : Fragment() {
 
         createNoteViewModel.saveNote(noteProto)
         findNavController().navigateUp()
+        createNoteViewModel.clearImages()
     }
 
     private fun setDate(date: LocalDate) {
