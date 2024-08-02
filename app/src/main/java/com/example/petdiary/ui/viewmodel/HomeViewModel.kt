@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.petdiary.mock.addMockData
 import com.example.petdiary.repository.DiaryNoteRepository
 import com.example.petdiary.services.calendar.CastDates
 import com.example.petdiary.ui.model.DiaryNote
@@ -31,10 +32,15 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
                 val groupedByYear = notes.groupBy {
                     CastDates.fromStringToDate(it.date).year
+                }.mapValues { entry ->
+                    entry.value.sortedByDescending { note ->
+                        CastDates.fromStringToDate(note.date)
+                    }
                 }.toSortedMap(compareByDescending { it })
 
                 _yearSections.postValue(groupedByYear)
             }
         }
     }
+
 }

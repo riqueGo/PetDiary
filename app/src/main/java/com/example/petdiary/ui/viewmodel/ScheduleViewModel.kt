@@ -1,8 +1,6 @@
 package com.example.petdiary.ui.viewmodel
 
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,7 +10,6 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-@RequiresApi(Build.VERSION_CODES.O)
 class ScheduleViewModel : ViewModel() {
 
     private val _appointments = MutableLiveData<MutableList<Appointment>>().apply { value = mutableListOf() }
@@ -26,14 +23,8 @@ class ScheduleViewModel : ViewModel() {
     val endDateTime: LocalDateTime?
         get() = _endDateTime
 
-    private fun addAppointment(appointment: Appointment) {
-        _appointments.value?.add(appointment)
-        setAppointments(_appointments.value!!)
-    }
-
     fun setAppointments(appointments: MutableList<Appointment>) {
-        _appointments.value?.clear()
-        _appointments.value?.addAll(appointments)
+        _appointments.value = appointments
     }
 
     fun setStartDate(date: LocalDate) {
@@ -61,5 +52,17 @@ class ScheduleViewModel : ViewModel() {
         )
         addAppointment(newAppointment)
         CalendarLoader(context, "PetDiary", "").addEventToCalendar(newAppointment)
+    }
+
+    private fun addAppointment(appointment: Appointment) {
+        val updatedAppointments = _appointments.value?.toMutableList() ?: mutableListOf()
+        updatedAppointments.add(appointment)
+        setAppointments(updatedAppointments)
+    }
+
+    fun removeAppointment(appointment: Appointment) {
+        val updatedAppointments = _appointments.value?.toMutableList() ?: mutableListOf()
+        updatedAppointments.remove(appointment)
+        setAppointments(updatedAppointments)
     }
 }

@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isEmpty
+import androidx.core.view.isNotEmpty
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -37,8 +39,8 @@ class HomeFragment : Fragment() {
             diaryAdapter = DiaryAdapter(requireContext(), sections)
             expandableListView.setAdapter(diaryAdapter)
 
-            for (i in 0 until diaryAdapter.groupCount) {
-                expandableListView.expandGroup(i)
+            if (diaryAdapter.groupCount > 0) {
+                expandableListView.expandGroup(0)
             }
         }
 

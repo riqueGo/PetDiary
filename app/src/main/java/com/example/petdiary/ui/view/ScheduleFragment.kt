@@ -2,23 +2,24 @@ package com.example.petdiary.ui.view
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.ContentUris
 import android.content.ContentValues
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.graphics.Color
 import android.os.AsyncTask
-import android.os.Build
 import android.os.Bundle
 import android.provider.CalendarContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.petdiary.R
 import com.example.petdiary.databinding.FragmentScheduleBinding
@@ -84,13 +85,20 @@ class ScheduleFragment : Fragment() {
         scheduleViewModel = ViewModelProvider(requireActivity())[ScheduleViewModel::class.java]
 
         val recyclerView = binding.appointmentList
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        appointmentAdapter = AppointmentAdapter(scheduleViewModel.appointments.value ?: emptyList()) { appointment ->
-            showAppointmentDetails(appointment)
-        }
-        recyclerView.adapter = appointmentAdapter
 
-        scheduleViewModel.appointments.observe(viewLifecycleOwner) {
+        val dividerItemDecoration = DividerItemDecoration(
+            recyclerView.context,
+            DividerItemDecoration.VERTICAL
+        )
+        recyclerView.addItemDecoration(dividerItemDecoration)
+
+        scheduleViewModel.appointments.observe(viewLifecycleOwner) { apps ->
+            recyclerView.layoutManager = LinearLayoutManager(context)
+            appointmentAdapter = AppointmentAdapter(apps ?: emptyList()) { appointment ->
+                showAppointmentDetails(appointment)
+            }
+            recyclerView.adapter = appointmentAdapter
+
             appointmentAdapter.notifyDataSetChanged()
         }
 
@@ -139,20 +147,20 @@ class ScheduleFragment : Fragment() {
 
     private fun createPetDiaryCalendar() {
         val contentValues = ContentValues().apply {
-            put(CalendarContract.Calendars.ACCOUNT_NAME, "henrique.oliveira.gomes@gmail.com")
+            put(CalendarContract.Calendars.ACCOUNT_NAME, "")
             put(CalendarContract.Calendars.ACCOUNT_TYPE, "com.google")
             put(CalendarContract.Calendars.NAME, "PetDiary")
             put(CalendarContract.Calendars.CALENDAR_DISPLAY_NAME, "PetDiary")
             put(CalendarContract.Calendars.CALENDAR_COLOR, Color.BLUE)
             put(CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL, CalendarContract.Calendars.CAL_ACCESS_OWNER)
-            put(CalendarContract.Calendars.OWNER_ACCOUNT, "henrique.oliveira.gomes@gmail.com")
+            put(CalendarContract.Calendars.OWNER_ACCOUNT, "")
             put(CalendarContract.Calendars.VISIBLE, 1)
             put(CalendarContract.Calendars.SYNC_EVENTS, 1)
         }
 
         val uri = CalendarContract.Calendars.CONTENT_URI.buildUpon()
             .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
-            .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, "henrique.oliveira.gomes@gmail.com")
+            .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, "")
             .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, "com.google")
             .build()
 
@@ -164,6 +172,10 @@ class ScheduleFragment : Fragment() {
             .setTitle(appointment.title)
             .setMessage("Start: ${appointment.startDateTime}\nEnd: ${appointment.endDateTime}\n\nDescription: ${appointment.description}")
             .setPositiveButton("OK", null)
+            .setNegativeButton("Delete") { dialog, _ ->
+                deleteAppointment(appointment)
+                dialog.dismiss() // Close the dialog
+            }
             .show()
     }
 
@@ -179,7 +191,7 @@ class ScheduleFragment : Fragment() {
                     CalendarContract.Events.DTEND,
                     CalendarContract.Events.DESCRIPTION
                 ),
-                "${CalendarContract.Events.CALENDAR_ID} = ?",
+                "${CalendarContract.Events.CALENDAR_ID} = ? AND ${CalendarContract.Events.DELETED} = 0",
                 arrayOf(calendarId.toString()),
                 CalendarContract.Events.DTSTART + " ASC"
             )
@@ -207,7 +219,22 @@ class ScheduleFragment : Fragment() {
                     )
                 }
             }
-            scheduleViewModel.setAppointments(events)
+            requireActivity().runOnUiThread {
+                scheduleViewModel.setAppointments(events)
+            }
+        }
+    }
+
+    private fun deleteAppointment(appointment: Appointment) {
+        val uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, appointment.id)
+
+        val rowsDeleted = requireContext().contentResolver.delete(uri, null, null)
+
+        if (rowsDeleted > 0) {
+            Toast.makeText(requireContext(), "Appointment deleted", Toast.LENGTH_SHORT).show()
+            scheduleViewModel.removeAppointment(appointment)
+        } else {
+            Toast.makeText(requireContext(), "Failed to delete appointment", Toast.LENGTH_SHORT).show()
         }
     }
 }

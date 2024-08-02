@@ -17,14 +17,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <Button
+        <ImageButton
             android:id="@+id/captureButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Capture"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:background="@drawable/shutter_button_background"
+            android:scaleType="centerInside"
             android:layout_gravity="center|bottom"
-            android:layout_marginBottom="32dp"/>
-
+            android:elevation="4dp"
+            android:layout_marginBottom="32dp" />
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
